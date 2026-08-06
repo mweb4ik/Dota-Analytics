@@ -25,11 +25,7 @@ else
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connStr, npgsqlOptions =>
-    {
-        npgsqlOptions.CommandTimeout(60);
-        npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
-    }));
+    options.UseNpgsql(connStr));
 
 builder.Services.AddMemoryCache();
 
