@@ -24,7 +24,12 @@ else
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connStr));
+    options.UseNpgsql(connStr, npgsqlOptions =>
+    {
+        npgsqlOptions.UseSslMode(Npgsql.SslMode.Prefer);
+        npgsqlOptions.CommandTimeout(60);
+        npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
+    }));
 
 builder.Services.AddMemoryCache();
 
