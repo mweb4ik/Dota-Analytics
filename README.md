@@ -1,4 +1,4 @@
-# Dota Analytics API 
+# Dota Analytics 
 
 Backend service for professional Dota 2 match analytics with OpenDota API integration.  
 Features three-level caching, automated pro-match preloading, and full Docker containerization.
