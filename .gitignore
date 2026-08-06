@@ -1,0 +1,20 @@
+# Binaries
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Docker volumes
+postgres_data/
+docker-compose.yml
+!docker-compose.example.yml
+# Секреты 
+appsettings.Development.json
+*.env
+
+# OS
+Thumbs.db
+.DS_Store

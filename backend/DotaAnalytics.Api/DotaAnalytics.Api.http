@@ -1,0 +1,6 @@
+@DotaAnalytics.Api_HostAddress = http://localhost:5212
+
+GET {{DotaAnalytics.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

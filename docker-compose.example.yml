@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: YOUR_PASSWORD_HERE # Заменить на свой пароль
+      POSTGRES_DB: dota_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/DotaAnalytics.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=dota_db;Username=postgres;Password=YOUR_PASSWORD_HERE
+    depends_on:
+      - db
