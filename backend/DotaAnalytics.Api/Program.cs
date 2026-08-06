@@ -12,22 +12,33 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<MatchProcessingService>();
 builder.Services.AddScoped<MatchCacheService>();
 
+var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"[DEBUG] ConnectionString length: {connStr?.Length ?? 0}");
+if (!string.IsNullOrEmpty(connStr))
+{
+    Console.WriteLine($"[DEBUG] Starts with: {connStr.Substring(0, Math.Min(30, connStr.Length))}");
+}
+else
+{
+    Console.WriteLine("[ERROR] ConnectionString is NULL or EMPTY!");
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connStr));
 
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+await using (var scope = app.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate(); 
+    await dbContext.Database.MigrateAsync(); 
 }
 
 app.Lifetime.ApplicationStarted.Register(async () =>
 {
-    using var scope = app.Services.CreateScope();
+    await using var scope = app.Services.CreateAsyncScope();
     var cacheService = scope.ServiceProvider.GetRequiredService<MatchCacheService>();
     await cacheService.PreloadProMatchesAsync();
 });
@@ -39,7 +50,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 app.UseHttpsRedirection();
 
 app.MapGet("/", () => "Dota Analytics API is running!");
@@ -48,4 +58,4 @@ DotaAnalytics.Api.Endpoints.FetchMatchEndpoint.Map(app);
 DotaAnalytics.Api.Endpoints.MatchesEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.MatchPlayerStatsEndpoints.Map(app);
 
-app.Run();
+await app.RunAsync();
