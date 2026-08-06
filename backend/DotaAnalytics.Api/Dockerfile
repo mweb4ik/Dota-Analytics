@@ -1,11 +1,16 @@
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+COPY ["backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj", "backend/DotaAnalytics.Api/"]
+COPY ["backend/DotaAnalytics.Infrastructure/DotaAnalytics.Infrastructure.csproj", "backend/DotaAnalytics.Infrastructure/"]
+COPY ["backend/Modules/Matches/DotaAnalytics.Matches.csproj", "backend/Modules/Matches/"]
+COPY ["backend/Modules/Players/DotaAnalytics.Players.csproj", "backend/Modules/Players/"]
+
+RUN dotnet restore "backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj"
+
 COPY . .
 
-RUN dotnet restore "DotaAnalytics.Api.csproj"
-
+WORKDIR "/src/backend/DotaAnalytics.Api"
 RUN dotnet build "DotaAnalytics.Api.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
