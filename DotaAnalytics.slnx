@@ -1,13 +1,6 @@
 <Solution>
-  <Folder Name="/backend/">
-    <Project Path="backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj" />
-    <Project Path="backend/DotaAnalytics.Infrastructure/DotaAnalytics.Infrastructure.csproj" />
-  </Folder>
+  <Folder Name="/backend/" />
   <Folder Name="/backend/Modules/" />
-  <Folder Name="/backend/Modules/Matches/">
-    <Project Path="backend/Modules/Matches/DotaAnalytics.Matches.csproj" />
-  </Folder>
-  <Folder Name="/backend/Modules/Players/">
-    <Project Path="backend/Modules/Players/DotaAnalytics.Players.csproj" />
-  </Folder>
+  <Folder Name="/backend/Modules/Matches/" />
+  <Folder Name="/backend/Modules/Players/" />
 </Solution>

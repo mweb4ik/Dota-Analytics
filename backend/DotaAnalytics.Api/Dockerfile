@@ -1,18 +1,15 @@
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj", "backend/DotaAnalytics.Api/"]
-COPY ["backend/DotaAnalytics.Infrastructure/DotaAnalytics.Infrastructure.csproj", "backend/DotaAnalytics.Infrastructure/"]
-
-RUN dotnet restore "backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj"
-
 COPY . .
 
-WORKDIR "/src/backend/DotaAnalytics.Api"
-RUN dotnet build "DotaAnalytics.Api.csproj" -c Release -o /app/build
+RUN dotnet restore "DotaAnalytics.Api.csproj"
+
+RUN dotnet build "DotaAnalytics.Api.csproj" -c Release -o /app/build --no-restore
 
 FROM build AS publish
-RUN dotnet publish "DotaAnalytics.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "DotaAnalytics.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false --no-build
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
