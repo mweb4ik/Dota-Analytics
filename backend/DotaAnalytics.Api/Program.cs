@@ -12,6 +12,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<MatchProcessingService>();
 builder.Services.AddScoped<MatchCacheService>();
 
+// Отладка ДО регистрации DbContext
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"[DEBUG] ConnectionString length: {connStr?.Length ?? 0}");
 if (!string.IsNullOrEmpty(connStr))
@@ -26,7 +27,6 @@ else
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connStr, npgsqlOptions =>
     {
-        npgsqlOptions.UseSslMode(Npgsql.SslMode.Prefer);
         npgsqlOptions.CommandTimeout(60);
         npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 3);
     }));
