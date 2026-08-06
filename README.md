@@ -20,5 +20,5 @@ Features three-level caching, automated pro-match preloading, and full Docker co
 ### Local Development
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/dota-analytics-api.git
+   git clone https://github.com/YOUR_USERNAME/Dota-Analytics.git
    cd Dota-Analytics
