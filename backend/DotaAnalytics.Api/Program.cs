@@ -3,6 +3,8 @@ using DotaAnalytics.Infrastructure.Persistence;
 using DotaAnalytics.Api.Services;       
 using DotaAnalytics.Api.Middleware;      
 
+Environment.SetEnvironmentVariable("DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE", "false");
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
