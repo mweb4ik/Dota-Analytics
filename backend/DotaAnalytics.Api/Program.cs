@@ -46,11 +46,11 @@ app.Lifetime.ApplicationStarted.Register(async () =>
     await cacheService.PreloadProMatchesAsync();
 });
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
