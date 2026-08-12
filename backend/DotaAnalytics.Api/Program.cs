@@ -8,13 +8,17 @@ Environment.SetEnvironmentVariable("DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE", "
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<MatchProcessingService>();
 builder.Services.AddScoped<MatchCacheService>();
 
-// Отладка ДО регистрации DbContext
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"[DEBUG] ConnectionString length: {connStr?.Length ?? 0}");
 if (!string.IsNullOrEmpty(connStr))
