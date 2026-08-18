@@ -64,5 +64,6 @@ app.MapGet("/", () => "Dota Analytics API is running!");
 DotaAnalytics.Api.Endpoints.FetchMatchEndpoint.Map(app);
 DotaAnalytics.Api.Endpoints.MatchesEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.MatchPlayerStatsEndpoints.Map(app);
+DotaAnalytics.Api.Endpoints.PlayerStatsEndpoints.Map(app);
 
 await app.RunAsync();
