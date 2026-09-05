@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DotaAnalytics.Infrastructure.Persistence;
-using DotaAnalytics.Api.Services;       
-using DotaAnalytics.Api.Middleware;      
+using DotaAnalytics.Api.Services;
+using DotaAnalytics.Api.Middleware;
 
 Environment.SetEnvironmentVariable("DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE", "false");
 
@@ -18,6 +18,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<MatchProcessingService>();
 builder.Services.AddScoped<MatchCacheService>();
+builder.Services.AddScoped<OpenDotaService>();
 
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"[DEBUG] ConnectionString length: {connStr?.Length ?? 0}");
@@ -40,7 +41,7 @@ var app = builder.Build();
 await using (var scope = app.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.MigrateAsync(); 
+    await dbContext.Database.MigrateAsync();
 }
 
 app.Lifetime.ApplicationStarted.Register(async () =>
@@ -50,11 +51,8 @@ app.Lifetime.ApplicationStarted.Register(async () =>
     await cacheService.PreloadProMatchesAsync();
 });
 
-//if (app.Environment.IsDevelopment())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
@@ -66,4 +64,6 @@ DotaAnalytics.Api.Endpoints.MatchesEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.MatchPlayerStatsEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.PlayerStatsEndpoints.Map(app);
 
+
 await app.RunAsync();
+

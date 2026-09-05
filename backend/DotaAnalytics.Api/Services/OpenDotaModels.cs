@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 namespace DotaAnalytics.Api.Services;
 
-// Главный класс для ответа по матчу
 public class OpenDotaMatchResponse
 {
     [JsonPropertyName("match_id")]
@@ -42,5 +41,30 @@ public class OpenDotaPlayerResponse
     public int LastHits { get; set; }
 
     [JsonPropertyName("hero_id")]
-    public int HeroId { get; set; } 
+    public int HeroId { get; set; }
+
+
+    [JsonPropertyName("xp_per_min")]
+    public int XpPerMin { get; set; }
+
+    [JsonPropertyName("hero_damage")]
+    public int HeroDamage { get; set; }
+
+    [JsonPropertyName("tower_damage")]
+    public int TowerDamage { get; set; }
+
+    [JsonPropertyName("hero_healing")]
+    public int HeroHealing { get; set; }
+
+    [JsonPropertyName("denies")]
+    public int Denies { get; set; }
+
+    [JsonPropertyName("level")]
+    public int Level { get; set; }
+
+    [JsonPropertyName("net_worth")]
+    public int NetWorth { get; set; }
+
+    [JsonPropertyName("lane_efficiency")]
+    public double LaneEfficiency { get; set; }
 }

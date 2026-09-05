@@ -15,11 +15,6 @@ public static class MatchPlayerStatsEndpoints
     /// Adds a new player statistic record to an existing match.
     /// Validates match existence, duplicate players, and match age before saving.
     /// </summary>
-    /// <param name="matchId">The ID of the match to add the player to.</param>
-    /// <param name="request">The player statistics data payload.</param>
-    /// <param name="context">The database context.</param>
-    /// <returns>201 Created if successful, 400 Bad Request for invalid ID, 404 Not Found if match doesn't exist, 
-    /// 409 Conflict if player already exists, or 422 Unprocessable Entity if match is too old.</returns>
     private static async Task<IResult> AddPlayerStatAsync(
         long matchId,
         CreatePlayerStatRequest request,
@@ -62,7 +57,16 @@ public static class MatchPlayerStatsEndpoints
             Assists = request.Assists,
             GoldPerMin = request.GoldPerMin,
             LastHits = request.LastHits,
-            Hero = request.HeroId
+            Hero = request.HeroId,
+
+            XpPerMin = request.XpPerMin,
+            HeroDamage = request.HeroDamage,
+            TowerDamage = request.TowerDamage,
+            HeroHealing = request.HeroHealing,
+            Denies = request.Denies,
+            Level = request.Level,
+            NetWorth = request.NetWorth,
+            LaneEfficiency = request.LaneEfficiency
         };
 
         context.MatchPlayerStats.Add(playerStat);
@@ -75,13 +79,6 @@ public static class MatchPlayerStatsEndpoints
 /// <summary>
 /// Represents the payload for adding a player's statistics to a match.
 /// </summary>
-/// <param name="AccountId">The 32-bit or 64-bit Steam Account ID of the player.</param>
-/// <param name="Kills">Number of kills achieved by the player.</param>
-/// <param name="Deaths">Number of deaths suffered by the player.</param>
-/// <param name="Assists">Number of assists made by the player.</param>
-/// <param name="GoldPerMin">Average gold earned per minute.</param>
-/// <param name="LastHits">Total number of last hits.</param>
-/// <param name="HeroId">The numeric ID of the hero played.</param>
 public record CreatePlayerStatRequest(
     long AccountId,
     int Kills,
@@ -89,5 +86,13 @@ public record CreatePlayerStatRequest(
     int Assists,
     int GoldPerMin,
     int LastHits,
-    Heroes HeroId
+    Heroes HeroId,
+    int XpPerMin,
+    int HeroDamage,
+    int TowerDamage,
+    int HeroHealing,
+    int Denies,
+    int Level,
+    int NetWorth,
+    double LaneEfficiency
 );

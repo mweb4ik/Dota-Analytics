@@ -59,6 +59,15 @@ public class OpenDotaService
             GoldPerMin = p.GoldPerMin,
             LastHits = p.LastHits,
             Hero = (Heroes)p.HeroId,
+
+            XpPerMin = p.XpPerMin,
+            HeroDamage = p.HeroDamage,
+            TowerDamage = p.TowerDamage,
+            HeroHealing = p.HeroHealing,
+            Denies = p.Denies,
+            Level = p.Level,
+            NetWorth = p.NetWorth,
+            LaneEfficiency = p.LaneEfficiency
         }).ToList();
 
         await _context.Matches.AddAsync(match);
