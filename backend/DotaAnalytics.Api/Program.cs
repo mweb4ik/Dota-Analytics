@@ -20,6 +20,23 @@ builder.Services.AddScoped<MatchProcessingService>();
 builder.Services.AddScoped<MatchCacheService>();
 builder.Services.AddScoped<OpenDotaService>();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:5173", 
+            "http://localhost:3000", 
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:3000"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+    });
+});
+
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 Console.WriteLine($"[DEBUG] ConnectionString length: {connStr?.Length ?? 0}");
 if (!string.IsNullOrEmpty(connStr))
@@ -53,6 +70,9 @@ app.Lifetime.ApplicationStarted.Register(async () =>
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+
+app.UseCors("AllowFrontend");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
