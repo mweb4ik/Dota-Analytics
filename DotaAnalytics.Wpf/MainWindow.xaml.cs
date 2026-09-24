@@ -1,13 +1,17 @@
-﻿using System.Windows;
+﻿using DotaAnalytics.Wpf.Services; 
+using System.Windows;
 using System.Windows.Controls;
 
 namespace DotaAnalytics.Wpf;
 
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private readonly IDotaAnalyticsService _apiService;
+
+    public MainWindow(IDotaAnalyticsService apiService)
     {
         InitializeComponent();
+        _apiService = apiService;
     }
 
     private void Dashboard_Click(object sender, RoutedEventArgs e)
@@ -39,14 +43,15 @@ public partial class MainWindow : Window
     {
         ContentArea.Children.Clear();
 
-        var title = new TextBlock
+        UserControl pageControl = page switch
         {
-            Text = page,
-            Foreground = System.Windows.Media.Brushes.White,
-            FontSize = 28,
-            FontWeight = FontWeights.Bold
+            "Matches" => new Pages.MatchesPage(_apiService),
+            "Players" => new Pages.PlayersPage(),
+            "Heroes" => new Pages.HeroesPage(),
+            "Leaderboard" => new Pages.LeaderboardPage(),
+            _ => new Pages.MatchesPage(_apiService) 
         };
 
-        ContentArea.Children.Add(title);
+        ContentArea.Children.Add(pageControl);
     }
 }

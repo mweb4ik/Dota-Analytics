@@ -6,6 +6,12 @@ public class OpenDotaMatchResponse
 {
     [JsonPropertyName("match_id")]
     public long MatchId { get; set; }
+    [JsonPropertyName("id")]
+    public long Id
+    {
+        get => MatchId;
+        set => MatchId = value;
+    }
 
     [JsonPropertyName("duration")]
     public int Duration { get; set; }

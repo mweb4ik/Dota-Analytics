@@ -8,9 +8,26 @@ public static class MatchPlayerStatsEndpoints
 {
     public static void Map(WebApplication app)
     {
+        app.MapGet("/api/matches/{matchId}/players", GetPlayersByMatchIdAsync);
         app.MapPost("/api/matches/{matchId}/players", AddPlayerStatAsync);
-    }
 
+    }
+    /// <summary>
+    /// Get list of al player on specific match
+    /// </summary>
+    private static async Task<IResult> GetPlayersByMatchIdAsync(long matchId, AppDbContext context)
+    {
+        var match = await context.Matches
+            .Include(m => m.Players)
+            .FirstOrDefaultAsync(m => m.Id == matchId);
+
+        if (match is null)
+        {
+            return Results.NotFound(new { error = "Матч не найден" });
+        }
+
+        return Results.Ok(match.Players);
+    }
     /// <summary>
     /// Adds a new player statistic record to an existing match.
     /// Validates match existence, duplicate players, and match age before saving.
