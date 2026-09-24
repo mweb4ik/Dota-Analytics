@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="DotaAnalytics.Api/DotaAnalytics.Api.csproj" />
-  <Project Path="DotaAnalytics.Infrastructure/DotaAnalytics.Infrastructure.csproj" />
-</Solution>

@@ -1,6 +1,20 @@
 <Solution>
-  <Folder Name="/backend/" />
+  <Folder Name="/backend/">
+    <Project Path="backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj" />
+    <Project Path="backend/DotaAnalytics.Infrastructure/DotaAnalytics.Infrastructure.csproj" />
+    <Project Path="backend/DotaAnalytics.Shared/DotaAnalytics.Shared.csproj" Id="bb4598d9-89e9-4c98-8407-c3a5347be920" />
+  </Folder>
   <Folder Name="/backend/Modules/" />
-  <Folder Name="/backend/Modules/Matches/" />
-  <Folder Name="/backend/Modules/Players/" />
+  <Folder Name="/backend/Modules/Matches/">
+    <Project Path="backend/Modules/Matches/DotaAnalytics.Matches.csproj" />
+  </Folder>
+  <Folder Name="/backend/Modules/Players/">
+    <Project Path="backend/Modules/Players/DotaAnalytics.Players.csproj" />
+  </Folder>
+  <Folder Name="/dekstop/">
+    <Project Path="DotaAnalytics.Wpf/DotaAnalytics.Wpf.csproj" Id="7c1dff26-950d-4108-841d-40648105dbb9" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DotaAnalytics.Tests/DotaAnalytics.Tests.csproj" />
+  </Folder>
 </Solution>

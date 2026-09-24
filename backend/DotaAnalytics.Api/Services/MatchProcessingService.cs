@@ -1,3 +1,5 @@
+
+using DotaAnalytics.Shared.Models;
 namespace DotaAnalytics.Api.Services;
 
 public class MatchProcessingService

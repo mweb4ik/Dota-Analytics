@@ -2,6 +2,7 @@ using System.Text.Json;
 using DotaAnalytics.Infrastructure.Persistence;
 using DotaAnalytics.Modules.Matches.Models;
 using Microsoft.EntityFrameworkCore;
+using DotaAnalytics.Shared.Models;
 namespace DotaAnalytics.Api.Services;
 
 public class OpenDotaService

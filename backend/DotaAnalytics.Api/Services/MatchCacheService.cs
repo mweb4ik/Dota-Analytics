@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+using DotaAnalytics.Shared.Models;
 namespace DotaAnalytics.Api.Services;
 public class MatchCacheService
 {

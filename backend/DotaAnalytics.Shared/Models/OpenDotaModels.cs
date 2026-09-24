@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DotaAnalytics.Api.Services;
+namespace DotaAnalytics.Shared.Models;
 
 public class OpenDotaMatchResponse
 {

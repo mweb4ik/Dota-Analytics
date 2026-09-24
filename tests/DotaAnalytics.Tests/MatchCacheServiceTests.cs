@@ -14,7 +14,7 @@ using Xunit;
 using DotaAnalytics.Infrastructure.Persistence;
 using DotaAnalytics.Modules.Matches.Models; 
 using DotaAnalytics.Api.Services;
-
+using DotaAnalytics.Shared.Models;
 namespace DotaAnalytics.Tests;
 
 public class MatchCacheServiceTests

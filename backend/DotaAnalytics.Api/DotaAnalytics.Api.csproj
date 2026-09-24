@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotaAnalytics.Infrastructure\DotaAnalytics.Infrastructure.csproj" />
+    <ProjectReference Include="..\DotaAnalytics.Shared\DotaAnalytics.Shared.csproj" />
     <ProjectReference Include="..\Modules\Matches\DotaAnalytics.Matches.csproj" />
     <ProjectReference Include="..\Modules\Players\DotaAnalytics.Players.csproj" />
   </ItemGroup>
