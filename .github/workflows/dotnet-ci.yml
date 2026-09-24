@@ -20,10 +20,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj
 
     - name: Build project
-      run: dotnet build --no-restore
+      run: dotnet build backend/DotaAnalytics.Api/DotaAnalytics.Api.csproj --no-restore
 
     - name: Run tests
       run: dotnet test tests/DotaAnalytics.Tests/DotaAnalytics.Tests.csproj --no-build --verbosity normal
