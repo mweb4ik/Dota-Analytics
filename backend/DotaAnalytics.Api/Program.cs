@@ -20,14 +20,13 @@ builder.Services.AddScoped<MatchProcessingService>();
 builder.Services.AddScoped<MatchCacheService>();
 builder.Services.AddScoped<OpenDotaService>();
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-            "http://localhost:5173", 
-            "http://localhost:3000", 
+            "http://localhost:5173",
+            "http://localhost:3000",
             "http://127.0.0.1:5173",
             "http://127.0.0.1:3000"
         )
@@ -70,10 +69,7 @@ app.Lifetime.ApplicationStarted.Register(async () =>
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-
 app.UseCors("AllowFrontend");
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
@@ -83,5 +79,46 @@ DotaAnalytics.Api.Endpoints.FetchMatchEndpoint.Map(app);
 DotaAnalytics.Api.Endpoints.MatchesEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.MatchPlayerStatsEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.PlayerStatsEndpoints.Map(app);
+
+// ========================================================================
+// ЯДЕРНЫЙ ЭНДПОИНТ ДЛЯ ОБНОВЛЕНИЯ ДАННЫХ (удалить перед финальной сдачей)
+// ========================================================================
+app.MapPost("/api/refresh", async (AppDbContext context, MatchCacheService cacheService) =>
+{
+    try
+    {
+        Console.WriteLine("[REFRESH] Начало очистки базы данных...");
+
+        // 1. Сначала удаляем статистику игроков (чтобы не нарушить внешние ключи)
+        context.MatchPlayerStats.RemoveRange(context.MatchPlayerStats);
+
+        // 2. Удаляем сами матчи
+        context.Matches.RemoveRange(context.Matches);
+
+        // 3. Сохраняем удаление в БД
+        await context.SaveChangesAsync();
+        Console.WriteLine("[REFRESH] База данных очищена.");
+
+        // 4. Загружаем свежие про-матчи из OpenDota
+        Console.WriteLine("[REFRESH] Начало загрузки свежих данных из OpenDota...");
+        await cacheService.PreloadProMatchesAsync();
+        Console.WriteLine("[REFRESH] Данные успешно обновлены!");
+
+        return Results.Ok(new
+        {
+            message = "База очищена и успешно обновлена свежими про-матчами",
+            timestamp = DateTime.UtcNow
+        });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[REFRESH ERROR] {ex.Message}");
+        return Results.Problem(
+            detail: $"Ошибка при обновлении данных: {ex.Message}",
+            statusCode: 500
+        );
+    }
+});
+// ========================================================================
 
 await app.RunAsync();

@@ -4,13 +4,92 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#101114">
-        <TextBlock Text=" Страница игроков (Players)" 
-                   Foreground="White" 
-                   FontSize="24" 
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+             d:DesignHeight="600" d:DesignWidth="800">
+
+    <Grid Background="#101114" Margin="20">
+        <Grid.Resources>
+            <!-- Стили для ComboBox -->
+            <Style TargetType="ComboBox">
+                <Setter Property="Background" Value="#181A1F"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="#2A2D35"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <Setter Property="Height" Value="35"/>
+            </Style>
+            <Style TargetType="ComboBoxItem">
+                <Setter Property="Background" Value="#181A1F"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Padding" Value="10,5"/>
+            </Style>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Панель выбора матча -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+            <TextBlock Text="Выберите матч:" 
+                       Foreground="#A0A3AA" 
+                       FontSize="16" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,10,0"/>
+
+            <ComboBox x:Name="MatchComboBox" 
+                      Width="250" 
+                      SelectionChanged="MatchComboBox_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Матч #" Foreground="#8D929B"/>
+                            <TextBlock Text="{Binding MatchId}" Foreground="White" FontWeight="Bold"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+
+            <TextBlock x:Name="LoadingText" 
+                       Text="Загрузка игроков..." 
+                       Foreground="#7ED957" 
+                       FontSize="14" 
+                       VerticalAlignment="Center" 
+                       Margin="15,0,0,0" 
+                       Visibility="Collapsed"/>
+        </StackPanel>
+
+        <!-- Таблица статистики игроков -->
+        <DataGrid x:Name="PlayersDataGrid"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  Background="#181A1F"
+                  Foreground="White"
+                  GridLinesVisibility="Horizontal"
+                  HorizontalGridLinesBrush="#2A2D35"
+                  BorderThickness="0"
+                  RowBackground="#181A1F"
+                  AlternatingRowBackground="#1B1E24">
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#252830"/>
+                    <Setter Property="Foreground" Value="#A0A3AA"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="10,8"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Hero ID" Binding="{Binding HeroId}" Width="*" />
+                <DataGridTextColumn Header="K" Binding="{Binding Kills}" Width="0.5*" />
+                <DataGridTextColumn Header="D" Binding="{Binding Deaths}" Width="0.5*" />
+                <DataGridTextColumn Header="A" Binding="{Binding Assists}" Width="0.5*" />
+                <DataGridTextColumn Header="GPM" Binding="{Binding GoldPerMin}" Width="*" />
+                <DataGridTextColumn Header="LH" Binding="{Binding LastHits}" Width="*" />
+                <DataGridTextColumn Header="Урон по героям" Binding="{Binding HeroDamage}" Width="1.5*" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

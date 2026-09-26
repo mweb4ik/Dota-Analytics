@@ -28,4 +28,18 @@ public class DotaAnalyticsService : IDotaAnalyticsService
             return new PaginatedResponse<OpenDotaMatchResponse>();
         }
     }
+    public async Task<List<OpenDotaPlayerResponse>> GetPlayersByMatchIdAsync(long matchId)
+    {
+        try
+        {
+            var url = $"/api/matches/{matchId}/players";
+            var response = await _httpClient.GetFromJsonAsync<List<OpenDotaPlayerResponse>>(url);
+            return response ?? new List<OpenDotaPlayerResponse>();
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"Ошибка при запросе игроков матча {matchId}: {e.Message}");
+            return new List<OpenDotaPlayerResponse>();
+        }
+    }
 }

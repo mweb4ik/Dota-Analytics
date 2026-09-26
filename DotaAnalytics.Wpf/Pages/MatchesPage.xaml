@@ -7,7 +7,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Background="#101114" Margin="20">
-        <!-- Разделяем Grid на две части: таблица и панель пагинации -->
+        <!--  Grid на две части: таблица и панель пагинации -->
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <!-- Таблица занимает всё свободное место -->
@@ -46,14 +46,14 @@
         <!-- Панель пагинации -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
             <Button x:Name="BtnPrev" Content="← Назад" Width="100" Height="35" 
-                    Background="#252830" Foreground="White" BorderThickness="0"
+                    Background="#252830" Foreground="Red" BorderThickness="0"
                     Click="BtnPrev_Click" Margin="0,0,15,0"/>
 
             <TextBlock x:Name="PageNumberText" Text="Страница 1 из 1" 
                        Foreground="White" FontSize="16" VerticalAlignment="Center" Margin="0,0,15,0"/>
 
             <Button x:Name="BtnNext" Content="Вперёд →" Width="100" Height="35" 
-                    Background="#252830" Foreground="White" BorderThickness="0"
+                    Background="#252830" Foreground="Red" BorderThickness="0"
                     Click="BtnNext_Click"/>
         </StackPanel>
     </Grid>

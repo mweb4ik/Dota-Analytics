@@ -46,7 +46,7 @@ public partial class MainWindow : Window
         UserControl pageControl = page switch
         {
             "Matches" => new Pages.MatchesPage(_apiService),
-            "Players" => new Pages.PlayersPage(),
+            "Players" => new Pages.PlayersPage(_apiService),
             "Heroes" => new Pages.HeroesPage(),
             "Leaderboard" => new Pages.LeaderboardPage(),
             _ => new Pages.MatchesPage(_apiService) 
