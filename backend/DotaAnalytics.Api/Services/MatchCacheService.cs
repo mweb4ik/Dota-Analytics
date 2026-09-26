@@ -132,7 +132,16 @@ public class MatchCacheService
                 Assists = p.Assists,
                 GoldPerMin = p.GoldPerMin,
                 LastHits = p.LastHits,
-                HeroId = (int)p.Hero
+                HeroId = (int)p.Hero,
+
+                XpPerMin = p.XpPerMin,
+                Denies = p.Denies,
+                Level = p.Level,
+                HeroDamage = p.HeroDamage,
+                TowerDamage = p.TowerDamage,
+                HeroHealing = p.HeroHealing,
+                NetWorth = p.NetWorth,
+                LaneEfficiency = p.LaneEfficiency
             }).ToList()
         };
     }
