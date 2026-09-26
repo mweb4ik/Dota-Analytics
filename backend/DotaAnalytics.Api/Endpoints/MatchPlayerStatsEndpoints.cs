@@ -1,6 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using DotaAnalytics.Infrastructure.Persistence;
 using DotaAnalytics.Modules.Matches.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace DotaAnalytics.Api.Endpoints;
 
@@ -96,20 +97,50 @@ public static class MatchPlayerStatsEndpoints
 /// <summary>
 /// Represents the payload for adding a player's statistics to a match.
 /// </summary>
-public record CreatePlayerStatRequest(
-    long AccountId,
-    int Kills,
-    int Deaths,
-    int Assists,
-    int GoldPerMin,
-    int LastHits,
-    Heroes HeroId,
-    int XpPerMin,
-    int HeroDamage,
-    int TowerDamage,
-    int HeroHealing,
-    int Denies,
-    int Level,
-    int NetWorth,
-    double LaneEfficiency
-);
+public class CreatePlayerStatRequest
+{
+    [JsonPropertyName("accountId")]
+    public long AccountId { get; set; }
+
+    [JsonPropertyName("kills")]
+    public int Kills { get; set; }
+
+    [JsonPropertyName("deaths")]
+    public int Deaths { get; set; }
+
+    [JsonPropertyName("assists")]
+    public int Assists { get; set; }
+
+    [JsonPropertyName("goldPerMin")]
+    public int GoldPerMin { get; set; }
+
+    [JsonPropertyName("lastHits")]
+    public int LastHits { get; set; }
+
+    [JsonPropertyName("heroId")]
+    public Heroes HeroId { get; set; }
+
+    [JsonPropertyName("xpPerMin")]
+    public int XpPerMin { get; set; }
+
+    [JsonPropertyName("heroDamage")]
+    public int HeroDamage { get; set; }
+
+    [JsonPropertyName("towerDamage")]
+    public int TowerDamage { get; set; }
+
+    [JsonPropertyName("heroHealing")]
+    public int HeroHealing { get; set; }
+
+    [JsonPropertyName("denies")]
+    public int Denies { get; set; }
+
+    [JsonPropertyName("level")]
+    public int Level { get; set; }
+
+    [JsonPropertyName("netWorth")]
+    public int NetWorth { get; set; }
+
+    [JsonPropertyName("laneEfficiency")]
+    public double LaneEfficiency { get; set; }
+}

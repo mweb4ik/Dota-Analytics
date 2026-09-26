@@ -60,7 +60,6 @@ public static class MatchesEndpoints
         int skip = (page - 1) * pageSize;
 
         var matches = await query
-            //.Include(m => m.Players)
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync();
