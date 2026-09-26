@@ -148,12 +148,12 @@ public class MatchCacheService
 
     private async Task SaveMatchToDbAsync(OpenDotaMatchResponse match)
     {
-     
-    if (await _context.Matches.AnyAsync(m => m.Id == match.MatchId)) 
-    {
-        _logger.LogDebug("Матч {MatchId} уже существует в БД, пропуск сохранения", match.MatchId);
-        return; 
-    }
+        if (await _context.Matches.AnyAsync(m => m.Id == match.MatchId))
+        {
+            _logger.LogDebug("Матч {MatchId} уже существует в БД, пропуск сохранения", match.MatchId);
+            return;
+        }
+
         var entity = new Match
         {
             Id = match.MatchId,
@@ -169,12 +169,23 @@ public class MatchCacheService
                 Assists = p.Assists,
                 GoldPerMin = p.GoldPerMin,
                 LastHits = p.LastHits,
-                Hero = (Heroes)p.HeroId
+                Hero = (Heroes)p.HeroId,
+
+                XpPerMin = p.XpPerMin,
+                Denies = p.Denies,
+                Level = p.Level,
+                HeroDamage = p.HeroDamage,
+                TowerDamage = p.TowerDamage,
+                HeroHealing = p.HeroHealing,
+                NetWorth = p.NetWorth,
+                LaneEfficiency = p.LaneEfficiency
             }).ToList()
         };
 
         await _context.Matches.AddAsync(entity);
         await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Матч {MatchId} успешно сохранен в БД с полной статистикой!", match.MatchId);
     }
 }
 public class ProMatchSummary
