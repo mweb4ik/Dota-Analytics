@@ -82,53 +82,50 @@ DotaAnalytics.Api.Endpoints.MatchPlayerStatsEndpoints.Map(app);
 DotaAnalytics.Api.Endpoints.PlayerStatsEndpoints.Map(app);
 
 // ========================================================================
-// ЯДЕРНЫЙ ЭНДПОИНТ ДЛЯ ОБНОВЛЕНИЯ ДАННЫХ (удалить перед финальной сдачей)
+// ЭНДПОИНТЫ ДЛЯ УПРАВЛЕНИЯ ДАННЫМИ (удалить потом)
 // ========================================================================
-app.MapPost("/api/refresh", async (AppDbContext context, MatchCacheService cacheService, IMemoryCache memoryCache) =>
+
+// 1. ЭНДПОИНТ ДЛЯ ОЧИСТКИ (Работает мгновенно)
+app.MapPost("/api/refresh/clear", async (AppDbContext context, IMemoryCache memoryCache) =>
 {
     try
     {
-        Console.WriteLine("[REFRESH] Начало очистки базы данных...");
-
-        // 1. Сначала удаляем статистику игроков (чтобы не нарушить внешние ключи)
+        Console.WriteLine("[CLEAR] Начало очистки базы данных...");
         context.MatchPlayerStats.RemoveRange(context.MatchPlayerStats);
-
-        // 2. Удаляем сами матчи
         context.Matches.RemoveRange(context.Matches);
-
-        // 3. Сохраняем удаление в БД
         await context.SaveChangesAsync();
-        Console.WriteLine("[REFRESH] База данных очищена.");
 
-        // 4. ️ НОВОЕ: Очищаем кэш в памяти!
-        // Это заставит сервис заново скачать данные с OpenDota
         if (memoryCache is MemoryCache concreteCache)
         {
-            concreteCache.Compact(1.0); // Удаляем 100% записей из кэша
-            Console.WriteLine("[REFRESH] Кэш в памяти очищен.");
+            concreteCache.Compact(1.0);
         }
 
-        // 5. Загружаем свежие про-матчи из OpenDota
-        Console.WriteLine("[REFRESH] Начало загрузки свежих данных из OpenDota...");
-        await cacheService.PreloadProMatchesAsync();
-        Console.WriteLine("[REFRESH] Данные успешно обновлены!");
-
-        return Results.Ok(new
-        {
-            message = "База очищена, кэш сброшен и успешно обновлён свежими про-матчами",
-            timestamp = DateTime.UtcNow
-        });
+        Console.WriteLine("[CLEAR] База данных и кэш успешно очищены.");
+        return Results.Ok(new { message = "База и кэш очищены" });
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"[REFRESH ERROR] {ex.Message}");
-        return Results.Problem(
-            detail: $"Ошибка при обновлении данных: {ex.Message}",
-            statusCode: 500
-        );
+        return Results.Problem(detail: $"Ошибка очистки: {ex.Message}", statusCode: 500);
+    }
+});
+
+// 2. ЭНДПОИНТ ДЛЯ ЗАГРУЗКИ 
+app.MapPost("/api/refresh/fetch", async (MatchCacheService cacheService) =>
+{
+    try
+    {
+        Console.WriteLine("[FETCH] Начало загрузки свежих данных из OpenDota...");
+
+        await cacheService.PreloadProMatchesAsync();
+
+        Console.WriteLine("[FETCH] Данные успешно загружены и сохранены в БД!");
+        return Results.Ok(new { message = "Данные успешно загружены из OpenDota" });
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[FETCH ERROR] {ex.Message}");
+        return Results.Problem(detail: $"Ошибка загрузки: {ex.Message}", statusCode: 500);
     }
 });
 // ========================================================================
-// ========================================================================
-
 await app.RunAsync();
