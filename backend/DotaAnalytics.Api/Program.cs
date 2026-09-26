@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using DotaAnalytics.Infrastructure.Persistence;
-using DotaAnalytics.Api.Services;
 using DotaAnalytics.Api.Middleware;
+using DotaAnalytics.Api.Services;
+using DotaAnalytics.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 Environment.SetEnvironmentVariable("DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE", "false");
 
@@ -83,7 +84,7 @@ DotaAnalytics.Api.Endpoints.PlayerStatsEndpoints.Map(app);
 // ========================================================================
 // ЯДЕРНЫЙ ЭНДПОИНТ ДЛЯ ОБНОВЛЕНИЯ ДАННЫХ (удалить перед финальной сдачей)
 // ========================================================================
-app.MapPost("/api/refresh", async (AppDbContext context, MatchCacheService cacheService) =>
+app.MapPost("/api/refresh", async (AppDbContext context, MatchCacheService cacheService, IMemoryCache memoryCache) =>
 {
     try
     {
@@ -99,14 +100,22 @@ app.MapPost("/api/refresh", async (AppDbContext context, MatchCacheService cache
         await context.SaveChangesAsync();
         Console.WriteLine("[REFRESH] База данных очищена.");
 
-        // 4. Загружаем свежие про-матчи из OpenDota
+        // 4. ️ НОВОЕ: Очищаем кэш в памяти!
+        // Это заставит сервис заново скачать данные с OpenDota
+        if (memoryCache is MemoryCache concreteCache)
+        {
+            concreteCache.Compact(1.0); // Удаляем 100% записей из кэша
+            Console.WriteLine("[REFRESH] Кэш в памяти очищен.");
+        }
+
+        // 5. Загружаем свежие про-матчи из OpenDota
         Console.WriteLine("[REFRESH] Начало загрузки свежих данных из OpenDota...");
         await cacheService.PreloadProMatchesAsync();
         Console.WriteLine("[REFRESH] Данные успешно обновлены!");
 
         return Results.Ok(new
         {
-            message = "База очищена и успешно обновлена свежими про-матчами",
+            message = "База очищена, кэш сброшен и успешно обновлён свежими про-матчами",
             timestamp = DateTime.UtcNow
         });
     }
@@ -119,6 +128,7 @@ app.MapPost("/api/refresh", async (AppDbContext context, MatchCacheService cache
         );
     }
 });
+// ========================================================================
 // ========================================================================
 
 await app.RunAsync();
