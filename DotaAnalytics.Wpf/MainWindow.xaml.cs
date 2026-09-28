@@ -49,7 +49,8 @@ public partial class MainWindow : Window
             "Players" => new Pages.PlayersPage(_apiService),
             "Heroes" => new Pages.HeroesPage(_apiService),
             "Leaderboard" => new Pages.LeaderboardPage(_apiService),
-            _ => new Pages.MatchesPage(_apiService) 
+            "Settings" => new Pages.SettingsPage(_apiService),
+            _ => new Pages.MatchesPage(_apiService)
         };
 
         ContentArea.Children.Add(pageControl);

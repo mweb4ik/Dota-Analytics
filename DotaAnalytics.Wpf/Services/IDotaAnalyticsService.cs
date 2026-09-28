@@ -8,4 +8,6 @@ public interface IDotaAnalyticsService
     Task<List<OpenDotaPlayerResponse>> GetPlayersByMatchIdAsync(long matchId);
     Task<LeaderboardResponse> GetLeaderboardAsync();
     Task<List<HeroStat>> GetHeroStatsAsync();
+    Task<string> ClearDatabaseAsync();
+    Task<string> FetchFreshDataAsync();
 }

@@ -28,7 +28,7 @@ public class DotaAnalyticsService : IDotaAnalyticsService
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine($"Ошибка при запросе к API: {e.Message}");
+            Console.WriteLine($"Error requesting the API: {e.Message}");
             return new PaginatedResponse<OpenDotaMatchResponse>();
         }
     }
@@ -42,7 +42,7 @@ public class DotaAnalyticsService : IDotaAnalyticsService
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine($"Ошибка при запросе игроков матча {matchId}: {e.Message}");
+            Console.WriteLine($"Error retrieving match players {matchId}: {e.Message}");
             return new List<OpenDotaPlayerResponse>();
         }
     }
@@ -68,8 +68,41 @@ public class DotaAnalyticsService : IDotaAnalyticsService
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine($"Ошибка при запросе статистики героев: {e.Message}");
+            Console.WriteLine($"Error requesting hero statistics: {e.Message}");
             return new List<HeroStat>();
+        }
+    }
+    public async Task<string> ClearDatabaseAsync()
+    {
+        try
+        {
+            var response = await _httpClient.PostAsync("/api/refresh/clear", null);
+            if (response.IsSuccessStatusCode)
+            {
+                return "Database and cache is clear!";
+            }
+            return $"Error: {(int)response.StatusCode} {response.ReasonPhrase}";
+        }
+        catch (HttpRequestException e)
+        {
+            return $"Network error: {e.Message}";
+        }
+    }
+
+    public async Task<string> FetchFreshDataAsync()
+    {
+        try
+        {
+            var response = await _httpClient.PostAsync("/api/refresh/fetch", null);
+            if (response.IsSuccessStatusCode)
+            {
+                return " Data successfully loaded from the OpenDota API";
+            }
+            return $" Error: {(int)response.StatusCode} {response.ReasonPhrase}";
+        }
+        catch (HttpRequestException e)
+        {
+            return $"Network error: {e.Message}";
         }
     }
 }
