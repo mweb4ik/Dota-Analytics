@@ -59,4 +59,17 @@ public class DotaAnalyticsService : IDotaAnalyticsService
             return new LeaderboardResponse();
         }
     }
+    public async Task<List<HeroStat>> GetHeroStatsAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<List<HeroStat>>("/api/heroes/stats", _jsonOptions);
+            return response ?? new List<HeroStat>();
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"Ошибка при запросе статистики героев: {e.Message}");
+            return new List<HeroStat>();
+        }
+    }
 }

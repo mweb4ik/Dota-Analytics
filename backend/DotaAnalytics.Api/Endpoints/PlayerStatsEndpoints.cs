@@ -10,8 +10,8 @@ public static class PlayerStatsEndpoints
         app.MapGet("/api/players/{accountId}/stats", GetPlayerSummaryStatsAsync);
         app.MapGet("/api/players/{accountId}/heroes", GetHeroSummaryStatsAsync);
 
-        // Глобальный лидерборд (без accountId)
         app.MapGet("/api/leaderboards", GetLeaderboardStatsAsync);
+        app.MapGet("/api/heroes/stats", GetGlobalHeroStatsAsync);
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ public static class PlayerStatsEndpoints
                     winRate = Math.Round(winRate, 2)
                 };
             })
-            .Where(x => x.totalMatches >= 10) 
+            .Where(x => x.totalMatches >= 2) 
             .OrderByDescending(x => x.winRate) 
             .ThenByDescending(x => x.totalMatches) 
             .Take(10) 
@@ -225,5 +225,62 @@ public static class PlayerStatsEndpoints
     private static bool IsRadiantSide(Heroes hero)
     {
         return (int)hero % 2 == 0;
+    }
+    /// <summary>
+    /// Retrieves global statistics for all heroes across all matches.
+    /// Returns top 10 most played heroes with win rate and average KDA.
+    /// </summary>
+    private static async Task<IResult> GetGlobalHeroStatsAsync(AppDbContext context)
+    {
+        var allMatches = await context.Matches
+            .Include(m => m.Players)
+            .ToListAsync();
+
+        var allPlayerStats = allMatches
+            .SelectMany(m => m.Players)
+            .ToList();
+
+        var heroStats = allPlayerStats
+            .GroupBy(p => p.Hero)
+            .Select(group =>
+            {
+                var heroId = group.Key;
+                var stats = group.ToList();
+                int gamesPlayed = stats.Count;
+                int wins = 0;
+
+                foreach (var stat in stats)
+                {
+                    var match = allMatches.First(m => m.Id == stat.MatchId);
+                    bool isPlayerRadiant = IsRadiantSide(stat.Hero);
+
+                    if ((match.RadiantWin && isPlayerRadiant) || (!match.RadiantWin && !isPlayerRadiant))
+                    {
+                        wins++;
+                    }
+                }
+
+                double winRate = gamesPlayed > 0 ? (double)wins / gamesPlayed * 100 : 0;
+                double avgKills = stats.Average(p => p.Kills);
+                double avgDeaths = stats.Average(p => p.Deaths);
+                double avgAssists = stats.Average(p => p.Assists);
+
+                return new
+                {
+                    heroId = (int)heroId,
+                    gamesPlayed,
+                    wins,
+                    losses = gamesPlayed - wins,
+                    winRate = Math.Round(winRate, 2),
+                    averageKills = Math.Round(avgKills, 2),
+                    averageDeaths = Math.Round(avgDeaths, 2),
+                    averageAssists = Math.Round(avgAssists, 2)
+                };
+            })
+            .OrderByDescending(h => h.gamesPlayed)
+            .Take(10) 
+            .ToList();
+
+        return Results.Ok(heroStats);
     }
 }
