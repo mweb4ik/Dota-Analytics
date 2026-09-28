@@ -92,7 +92,7 @@ public class MatchCacheService
 
             if (proMatches == null || !proMatches.Any()) return;
 
-            foreach (var m in proMatches.Take(15))
+            foreach (var m in proMatches.Take(50))
 {
     try
     {
@@ -106,7 +106,7 @@ public class MatchCacheService
     await Task.Delay(1100); 
 }
             
-            _cache.Set(PRO_MATCHES_KEY, proMatches.Take(15).Select(m => m.MatchId).ToList(), TimeSpan.FromHours(1));
+            _cache.Set(PRO_MATCHES_KEY, proMatches.Take(50).Select(m => m.MatchId).ToList(), TimeSpan.FromHours(1));
             
             _logger.LogInformation("Предзагрузка завершена. Закэшировано {Count} про-матчей", proMatches.Count);
         }

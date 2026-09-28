@@ -1,13 +1,17 @@
 ﻿using DotaAnalytics.Shared.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace DotaAnalytics.Wpf.Services;
 
 public class DotaAnalyticsService : IDotaAnalyticsService
 {
     private readonly HttpClient _httpClient;
-
+    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    };
     public DotaAnalyticsService(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -18,7 +22,7 @@ public class DotaAnalyticsService : IDotaAnalyticsService
         try
         {
             var url = $"/api/matches?page={page}&pageSize={pageSize}";
-            var response = await _httpClient.GetFromJsonAsync<PaginatedResponse<OpenDotaMatchResponse>>(url);
+            var response = await _httpClient.GetFromJsonAsync<PaginatedResponse<OpenDotaMatchResponse>>(url, _jsonOptions);
 
             return response ?? new PaginatedResponse<OpenDotaMatchResponse>();
         }
@@ -33,13 +37,26 @@ public class DotaAnalyticsService : IDotaAnalyticsService
         try
         {
             var url = $"/api/matches/{matchId}/players";
-            var response = await _httpClient.GetFromJsonAsync<List<OpenDotaPlayerResponse>>(url);
+            var response = await _httpClient.GetFromJsonAsync<List<OpenDotaPlayerResponse>>(url, _jsonOptions);
             return response ?? new List<OpenDotaPlayerResponse>();
         }
         catch (HttpRequestException e)
         {
             Console.WriteLine($"Ошибка при запросе игроков матча {matchId}: {e.Message}");
             return new List<OpenDotaPlayerResponse>();
+        }
+    }
+    public async Task<LeaderboardResponse> GetLeaderboardAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<LeaderboardResponse>("/api/leaderboards", _jsonOptions);
+            return response ?? new LeaderboardResponse();
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"Ошибка при запросе лидерборда: {e.Message}");
+            return new LeaderboardResponse();
         }
     }
 }

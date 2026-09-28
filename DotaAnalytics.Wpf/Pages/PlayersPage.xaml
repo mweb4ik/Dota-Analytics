@@ -82,13 +82,21 @@
             </DataGrid.ColumnHeaderStyle>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Hero ID" Binding="{Binding HeroId}" Width="*" />
+                <DataGridTextColumn Header="Hero ID" Binding="{Binding HeroId}" Width="0.8*" />
+                <DataGridTextColumn Header="Ур." Binding="{Binding Level}" Width="0.5*" />
+
                 <DataGridTextColumn Header="K" Binding="{Binding Kills}" Width="0.5*" />
                 <DataGridTextColumn Header="D" Binding="{Binding Deaths}" Width="0.5*" />
                 <DataGridTextColumn Header="A" Binding="{Binding Assists}" Width="0.5*" />
-                <DataGridTextColumn Header="GPM" Binding="{Binding GoldPerMin}" Width="*" />
-                <DataGridTextColumn Header="LH" Binding="{Binding LastHits}" Width="*" />
-                <DataGridTextColumn Header="Урон по героям" Binding="{Binding HeroDamage}" Width="1.5*" />
+
+                <DataGridTextColumn Header="GPM" Binding="{Binding GoldPerMin}" Width="0.8*" />
+                <DataGridTextColumn Header="LH" Binding="{Binding LastHits}" Width="0.8*" />
+                <DataGridTextColumn Header="Denies" Binding="{Binding Denies}" Width="0.8*" />
+
+                <DataGridTextColumn Header="Урон" Binding="{Binding HeroDamage}" Width="1*" />
+                <DataGridTextColumn Header="Хил" Binding="{Binding HeroHealing}" Width="1*" />
+
+                <DataGridTextColumn Header="Эфф. линии" Binding="{Binding LaneEfficiency, StringFormat={}{0:P1}}" Width="1*" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

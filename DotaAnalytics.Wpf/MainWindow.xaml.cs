@@ -48,7 +48,7 @@ public partial class MainWindow : Window
             "Matches" => new Pages.MatchesPage(_apiService),
             "Players" => new Pages.PlayersPage(_apiService),
             "Heroes" => new Pages.HeroesPage(),
-            "Leaderboard" => new Pages.LeaderboardPage(),
+            "Leaderboard" => new Pages.LeaderboardPage(_apiService),
             _ => new Pages.MatchesPage(_apiService) 
         };
 
